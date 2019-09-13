@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Jasmine Spec Runner</title>
+
+    <link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+    <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+    <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+    <script src="../node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+
+    <!-- include spec files here... -->
+
+    <script>
+        // Bootstrap app data
+        window.app = {};
+    </script>
+
+</head>
+
+<body>
+    <script>
+
+        var BowlingGame = function () {
+            this.rolls = [];
+            this.currentRoll = 0;
+        };
+
+        BowlingGame.prototype.roll = function (pins) {
+            this.rolls[this.currentRoll++] = pins;
+        };
+
+        BowlingGame.prototype.score = function () {
+            var score = 0;
+            var frameIndex = 0;
+            var self = this;
+
+            function sumOfBallsInFrame() {
+                return self.rolls[frameIndex] + self.rolls[frameIndex + 1];
+            }
+
+            for (var frame = 0; frame < 10; frame++) {
+                score += sumOfBallsInFrame();
+                frameIndex += 2;
+            }
+            return score;
+        };
+
+        describe("A spy", function () {
+            var foo, bar = null;
+
+            beforeEach(function () {
+                foo = {
+                    setBar: function (value) {
+                        bar = value;
+                    }
+                };
+
+                spyOn(foo, 'setBar');
+
+                foo.setBar(123);
+                foo.setBar(456, 'another param');
+            });
+
+            it("tracks that the spy was called", function () {
+                expect(foo.setBar).toHaveBeenCalled();
+            });
+
+            it("tracks all the arguments of its calls", function () {
+                expect(foo.setBar).toHaveBeenCalledWith(124);
+                expect(foo.setBar).toHaveBeenCalledWith(456, 'another param');
+            });
+
+            it("stops all execution on a function", function () {
+                expect(bar).toBeNull();
+            });
+        });
+
+    </script>
+</body>
+
+</html>
